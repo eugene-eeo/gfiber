@@ -8,7 +8,6 @@ class TestFiberBase(TestCase):
         self.arr = []
         def task():
             self.arr.append(1)
-            yield
         self.fiber = Fiber(task)
 
     def test_thread(self):
@@ -37,10 +36,25 @@ class TestContext(TestCase):
         f1.switch()
         assert arr == [1,2,3]
 
+    def test_yield_unfinished(self):
+        arr = []
+        def task1():
+            arr.append(1)
+            yield f2
+            arr.append(3)
+
+        def task2():
+            arr.append(2)
+
+        f1 = Fiber(task1)
+        f2 = Fiber(task2)
+        f1.switch()
+        assert arr == [1,2]
 
 
 class TestConcurrent(TestCase):
     def test_switch(self):
+        res = []
         lock = Lock()
         fibers = []
 
@@ -54,7 +68,7 @@ class TestConcurrent(TestCase):
             try:
                 fibers[0].switch()
             except WrongThread as exc:
-                pass
+                res.append(1)
 
         threads = [
             Thread(target=switch_f1),
@@ -62,6 +76,7 @@ class TestConcurrent(TestCase):
             ]
         [t.start() for t in threads]
         [t.join() for t in threads]
+        assert res == [1]
 
 
 if __name__ == '__main__':
