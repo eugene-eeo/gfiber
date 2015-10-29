@@ -68,5 +68,26 @@ class TestFiber(TestCase):
         fiber.throw(IndexError)
         assert array == [2]
 
+    def test_switch_from_different_thread(self):
+        def task():
+            yield
+
+        def assertion():
+            try:
+                fiber.switch()
+            except WrongThread:
+                pass
+            else:
+                assert False
+
+        fiber = Fiber(task)
+        fiber.switch()
+
+        thread = Thread(target=assertion)
+        thread.start()
+        thread.join()
+
+        assert not fiber.done
+
 if __name__ == '__main__':
     main()

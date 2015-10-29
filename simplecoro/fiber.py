@@ -1,5 +1,5 @@
 from threading import current_thread
-from .exceptions import FiberFinished
+from .exceptions import FiberFinished, WrongThread
 
 
 class Fiber(object):
