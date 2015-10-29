@@ -1,5 +1,5 @@
 from unittest import main, TestCase
-from simplecoro import Fiber, WrongThread, FiberFinished
+from gfiber import Fiber, WrongThread, FiberFinished
 from threading import Thread, current_thread
 
 
