@@ -7,6 +7,7 @@ class TestFiber(TestCase):
     def test_init(self):
         fiber = Fiber(lambda: [])
         assert fiber.thread is current_thread()
+        assert not fiber.done
 
     def test_switch_simple(self):
         def task():
@@ -17,6 +18,7 @@ class TestFiber(TestCase):
         fiber = Fiber(task)
         fiber.switch()
         assert array == [1]
+        assert not fiber.done
 
     def test_switch_double(self):
         def task():
@@ -33,6 +35,7 @@ class TestFiber(TestCase):
             assert False
         except FiberFinished:
             assert array == [1, 2]
+            assert fiber.done
 
 
 if __name__ == '__main__':
