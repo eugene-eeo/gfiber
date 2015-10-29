@@ -20,15 +20,19 @@ class TestFiber(TestCase):
 
     def test_switch_double(self):
         def task():
+            array.append(1)
             yield
+            array.append(2)
 
+        array = []
         fiber = Fiber(task)
+        fiber.switch()
         fiber.switch()
         try:
             fiber.switch()
             assert False
         except FiberFinished:
-            pass
+            assert array == [1, 2]
 
 
 if __name__ == '__main__':
