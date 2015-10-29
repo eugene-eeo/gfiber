@@ -37,6 +37,22 @@ class TestFiber(TestCase):
             assert array == [1, 2]
             assert fiber.done
 
+    def test_switch_unfinished(self):
+        def task1():
+            array.append(1)
+            yield f2
+            array.append(3)
+
+        def task2():
+            array.append(2)
+            yield
+
+        array = []
+        f1 = Fiber(task1)
+        f2 = Fiber(task2)
+        f1.switch()
+        assert array == [1, 2]
+
     def test_throw(self):
         def task():
             try:
