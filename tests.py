@@ -18,7 +18,6 @@ class TestFiberBase(TestCase):
         assert self.arr == [1]
 
 
-
 class TestContext(TestCase):
     def test_yield_from_coro(self):
         arr = []
