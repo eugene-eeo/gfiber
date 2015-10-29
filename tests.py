@@ -1,6 +1,6 @@
 from unittest import main, TestCase
 from simplecoro import Fiber, WrongThread, FiberFinished
-from threading import Thread, Lock, current_thread
+from threading import Thread, current_thread
 
 
 class TestFiber(TestCase):
@@ -37,6 +37,20 @@ class TestFiber(TestCase):
             assert array == [1, 2]
             assert fiber.done
 
+    def test_throw(self):
+        def task():
+            try:
+                yield
+                array.append(1)
+            except IndexError:
+                array.append(2)
+                yield
+
+        array = []
+        fiber = Fiber(task)
+        fiber.switch()
+        fiber.throw(IndexError)
+        assert array == [2]
 
 if __name__ == '__main__':
     main()
