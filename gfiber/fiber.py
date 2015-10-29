@@ -1,10 +1,18 @@
+from inspect import isgenerator
 from threading import current_thread
 from .exceptions import FiberFinished, WrongThread
 
 
+def genify(fn):
+    res = fn()
+    if isgenerator(res):
+        for item in res:
+            yield item
+
+
 class Fiber(object):
     def __init__(self, task):
-        self.coro = task()
+        self.coro = genify(task)
         self.done = False
         self.thread = current_thread()
 
