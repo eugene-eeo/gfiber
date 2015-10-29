@@ -3,7 +3,7 @@ from simplecoro import Fiber, WrongThread
 from threading import Thread, Lock, current_thread
 
 
-class FiberBase(TestCase):
+class TestFiberBase(TestCase):
     def setUp(self):
         self.arr = []
         def task():
@@ -19,7 +19,27 @@ class FiberBase(TestCase):
         assert self.arr == [1]
 
 
-class TestConcurrent(FiberBase):
+
+class TestContext(TestCase):
+    def test_yield_from_coro(self):
+        arr = []
+        def task1():
+            arr.append(1)
+            yield f2
+            arr.append(3)
+
+        def task2():
+            arr.append(2)
+            yield f1
+
+        f1 = Fiber(task1)
+        f2 = Fiber(task2)
+        f1.switch()
+        assert arr == [1,2,3]
+
+
+
+class TestConcurrent(TestCase):
     def test_switch(self):
         lock = Lock()
         fibers = []
