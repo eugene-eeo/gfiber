@@ -3,7 +3,7 @@ from threading import current_thread
 
 
 @contextmanager
-def ensure(thread):
+def guard(thread):
     if current_thread() != thread:
         raise Exception
     yield
@@ -16,7 +16,7 @@ class Fiber(object):
         self.guard = ThreadGuard(self.thread)
 
     def switch(self):
-        with ensure(self.thread):
+        with guard(self.thread):
             for fiber in self.coro:
                 fiber.switch()
                 return
