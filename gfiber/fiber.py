@@ -24,4 +24,11 @@ class Fiber(object):
 
     def throw(self, *exc):
         self.guard()
-        self.coro.throw(*exc)
+        try:
+            self.coro.throw(*exc)
+        except StopIteration:
+            self.done = True
+            raise
+
+    def __repr__(self):
+        return '<Fiber [%s]>' % (self.coro.__name__,)
