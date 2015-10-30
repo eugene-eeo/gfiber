@@ -29,6 +29,3 @@ class Fiber(object):
         except StopIteration:
             self.done = True
             raise
-
-    def __repr__(self):
-        return '<Fiber [%s]>' % (self.coro.__name__,)
