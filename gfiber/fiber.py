@@ -1,4 +1,3 @@
-from inspect import isgenerator
 from threading import current_thread
 from .exceptions import FiberFinished, WrongThread
 
