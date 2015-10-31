@@ -48,8 +48,11 @@ def test_switch_from_different_thread():
     def assertion():
         with raises(WrongThread):
             fiber.switch()
+            array.append(1)
 
     fiber = Fiber(task)
+    array = []
     thread = Thread(target=assertion)
     thread.start()
     thread.join()
+    assert not array
