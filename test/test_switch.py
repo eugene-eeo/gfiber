@@ -1,5 +1,6 @@
 from pytest import raises
-from gfiber import Fiber, FiberFinished
+from gfiber import Fiber, FiberFinished, WrongThread
+from threading import Thread
 
 
 def test_switch_simple():
@@ -38,3 +39,17 @@ def test_switch_done():
     assert fiber.done
     with raises(FiberFinished):
         fiber.switch()
+
+
+def test_switch_from_different_thread():
+    def task():
+        yield
+
+    def assertion():
+        with raises(WrongThread):
+            fiber.switch()
+
+    fiber = Fiber(task)
+    thread = Thread(target=assertion)
+    thread.start()
+    thread.join()
