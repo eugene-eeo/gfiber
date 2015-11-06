@@ -1,6 +1,6 @@
 from pytest import raises
 from gfiber import Fiber, FiberFinished, WrongThread
-from threading import Thread
+from exthread import ExThread
 
 
 def test_switch_simple():
@@ -48,11 +48,8 @@ def test_switch_from_different_thread():
     def assertion():
         with raises(WrongThread):
             fiber.switch()
-            array.append(1)
 
     fiber = Fiber(task)
-    array = []
-    thread = Thread(target=assertion)
+    thread = ExThread(target=assertion)
     thread.start()
     thread.join()
-    assert not array
