@@ -1,5 +1,5 @@
 from pytest import raises
-from gfiber import Fiber, FiberFinished, WrongThread
+from gfiber import Fiber, FiberFinished
 from exthread import ExThread
 
 
@@ -44,15 +44,17 @@ def test_switch_done():
 def test_switch_from_different_thread():
     def task():
         yield
-
-    def assertion():
-        with raises(WrongThread):
-            fiber.switch()
+        yield
 
     fiber = Fiber(task)
-    thread = ExThread(target=assertion)
-    thread.start()
-    thread.join()
+    t1 = ExThread(fiber.switch)
+    t2 = ExThread(fiber.switch)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+    fiber.switch()
+    assert fiber.done
 
 
 def test_switch_multiple():
