@@ -1,9 +1,11 @@
 from pytest import raises
 from gfiber import Fiber, FiberFinished
+from threading import current_thread
 
 
 def test_fiber_init():
     fiber = Fiber(lambda: [])
+    assert fiber.thread is current_thread()
     assert not fiber.done
 
 

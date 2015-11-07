@@ -1,23 +1,26 @@
-from .exceptions import FiberFinished
+from threading import current_thread
+from .exceptions import FiberFinished, WrongThread
 
 
 class Fiber(object):
     def __init__(self, task):
-        self.coro = iter(task())
+        self.coro = task()
         self.done = False
+        self.thread = current_thread()
 
     def guard(self):
+        if current_thread() != self.thread:
+            raise WrongThread
         if self.done:
             raise FiberFinished
 
     def switch(self):
         self.guard()
-        try:
-            fiber = next(self.coro)
+        for fiber in self.coro:
             if fiber is not None:
                 fiber.switch()
-        except StopIteration:
-            self.done = True
+            return
+        self.done = True
 
     def throw(self, *exc):
         self.guard()

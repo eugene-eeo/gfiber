@@ -1,2 +1,2 @@
-from .exceptions import FiberFinished
+from .exceptions import FiberFinished, WrongThread
 from .fiber import Fiber
