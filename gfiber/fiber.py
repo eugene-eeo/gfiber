@@ -16,11 +16,12 @@ class Fiber(object):
 
     def switch(self):
         self.guard()
-        for fiber in self.coro:
+        try:
+            fiber = next(self.coro)
             if fiber is not None:
                 fiber.switch()
-            return
-        self.done = True
+        except StopIteration:
+            self.done = True
 
     def throw(self, *exc):
         self.guard()
