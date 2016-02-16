@@ -24,6 +24,7 @@ def test_switch_all():
     array = []
     fiber = Fiber(task)
     fiber.switch()
+    assert array == [1]
     fiber.switch()
     assert array == [1, 2]
     assert fiber.done
