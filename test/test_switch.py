@@ -5,18 +5,18 @@ from exthread import ExThread
 
 def test_switch():
     def task():
-        array.append(1)
+        arr.append(1)
         yield
-        array.append(2)
+        arr.append(2)
 
-    array = []
+    arr = []
     fiber = Fiber(task)
     fiber.switch()
-    assert array == [1]
+    assert arr == [1]
     assert not fiber.done
 
     fiber.switch()
-    assert array == [1, 2]
+    assert arr == [1, 2]
     assert fiber.done
 
 
