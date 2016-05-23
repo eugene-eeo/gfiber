@@ -1,5 +1,12 @@
 from threading import current_thread
-from .exceptions import FiberFinished, WrongThread
+
+
+class WrongThread(Exception):
+    pass
+
+
+class FiberFinished(Exception):
+    pass
 
 
 class Fiber(object):

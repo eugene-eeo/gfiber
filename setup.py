@@ -36,7 +36,7 @@ setup(
     ],
     include_package_data=True,
     package_data={'gfiber': ['LICENSE', 'README.rst']},
-    packages=['gfiber'],
+    py_modules=['gfiber'],
     tests_require=['pytest', 'exthread'],
     cmdclass={'test': PyTest},
     platforms='any',
